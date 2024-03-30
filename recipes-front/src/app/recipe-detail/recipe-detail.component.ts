@@ -23,6 +23,7 @@ export class RecipeDetailComponent implements OnInit {
   initialRecipe!: Recipe;
 
   imagePath!: SafeResourceUrl;
+  newImagePath!: SafeResourceUrl;
 
   editMode!: boolean;
 
@@ -87,8 +88,41 @@ export class RecipeDetailComponent implements OnInit {
       this.recipe.instructions[i].description;
       this.recipe.instructions[i].description = event.target.textContent?.trim();//the ! removes null or undefined 
     }
-    
   }
 
+  uploadImage(event : any) {
+    this.imagePath = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(event.target.files[0]));
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      console.log(base64String.replace('data:image/jpg;base64,',''));
+      this.recipe.image = base64String.split(',')[1];
+    };
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+      
+    }
+    console.log(this.imagePath);
+  }
+
+
+  dataURItoBlob(dataURI : string) {
+    // convert base64 to raw binary data held in a string
+    var byteString = atob(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to an ArrayBuffer
+    var arrayBuffer = new ArrayBuffer(byteString.length);
+    var _ia = new Uint8Array(arrayBuffer);
+    for (var i = 0; i < byteString.length; i++) {
+        _ia[i] = byteString.charCodeAt(i);
+    }
+
+    var dataView = new DataView(arrayBuffer);
+    var blob = new Blob([dataView], { type: mimeString });
+    return blob;
+}
 
 }

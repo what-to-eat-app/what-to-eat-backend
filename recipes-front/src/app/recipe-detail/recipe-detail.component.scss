@@ -1,3 +1,13 @@
 .edit-button{
     float: right;
 }
+.img-upload {
+    position: relative;
+  }
+  
+.img-upload > a {
+position: absolute;
+background: white;
+bottom: 0;
+left: 0;
+}
