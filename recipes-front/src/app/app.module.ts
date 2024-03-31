@@ -22,6 +22,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { ImageModule } from 'primeng/image';
 import { NgsContenteditableModule } from '@ng-stack/contenteditable';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { NgsContenteditableModule } from '@ng-stack/contenteditable';
     IngredientsComponent,
     RecipeDetailComponent,
     HomeComponent,
-    RelatedRecipesComponent
+    RelatedRecipesComponent,
+    PageNotFoundComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
