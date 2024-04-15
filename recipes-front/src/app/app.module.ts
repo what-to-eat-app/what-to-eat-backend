@@ -24,6 +24,7 @@ import { ImageModule } from 'primeng/image';
 import { NgsContenteditableModule } from '@ng-stack/contenteditable';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { LoginComponent } from './login/login.component';
+import { AccessDeniedComponent } from './errors/access-denied/access-denied.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { LoginComponent } from './login/login.component';
     HomeComponent,
     RelatedRecipesComponent,
     PageNotFoundComponent,
-    LoginComponent
+    LoginComponent,
+    AccessDeniedComponent
   ],
   imports: [
     BrowserModule,

@@ -5,13 +5,9 @@ server:
 spring:
   datasource:
     name: what_to_eat
-    url: jdbc:sqlite:C:/Users/Shadow/IdeaProjects/what_to_eat/recipes-back/src/main/resources/webScrapper/resources/what_to_eat.db
+    url: jdbc:sqlite:C:\\Users\\Shadow\\IdeaProjects\\what_to_eat\\recipes-back\\src\\main\\resources\\webScrapper\\resources\\what_to_eat.db
     username: sa
     password: sa
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
-hibernate:
-  ddl-hbm2ddl:
-    auto: create-drop
-  show_sql: false
 debug: true

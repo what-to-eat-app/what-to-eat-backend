@@ -1,4 +1,4 @@
-package javax.annotation;
+package jakarta.annotation;
 
 public @interface Nullable {
 }
