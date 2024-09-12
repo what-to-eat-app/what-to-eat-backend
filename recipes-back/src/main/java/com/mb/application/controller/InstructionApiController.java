@@ -19,34 +19,34 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("${openapi.recipeManagement.base-path:/api/v1}")
-@PreAuthorize("hasAnyRole('ADMIN','USER')")
+//@PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class InstructionApiController implements InstructionsApi {
 
     @Autowired
     InstructionService is;
 
-    @PreAuthorize("hasAuthority('WRITE_PRIVILEGE') and hasRole('ADMIN')")
+    //@PreAuthorize("hasAuthority('WRITE_PRIVILEGE') and hasRole('ADMIN')")
     public ResponseEntity<Instruction> createInstruction(@RequestBody Instruction instruction) {
         Instruction created = is.createInstruction(instruction);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
 
     }
 
-    @PreAuthorize("hasAuthority('DELETE_PRIVILEGE') and hasRole('ADMIN')")
+    //@PreAuthorize("hasAuthority('DELETE_PRIVILEGE') and hasRole('ADMIN')")
     public ResponseEntity<Void> deleteInstruction(String id) {
         is.deleteRecipe(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
-    @PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
+    //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Instruction>> listInstructions(String fields, Integer offset, Integer limit, String name,
             Integer recipeId) {
         List<Instruction> instructions = is.listInstructions();
         return new ResponseEntity<List<Instruction>>(instructions, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
+    //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Instruction> retrieveInstruction(@PathVariable("id") String id) {
         Instruction instruction = is.getInstruction(id);
         if (instruction == null) {
@@ -56,7 +56,7 @@ public class InstructionApiController implements InstructionsApi {
 
     }
 
-    @PreAuthorize("hasAuthority('UPDATE_PRIVILEGE') and hasRole('ADMIN')")
+    //@PreAuthorize("hasAuthority('UPDATE_PRIVILEGE') and hasRole('ADMIN')")
     public ResponseEntity<Instruction> updateInstruction(String id, @RequestBody Instruction instruction) {
         int updatedId = is.updateInstruction(id, instruction);
         return retrieveInstruction(Integer.toString(updatedId));

@@ -12,15 +12,17 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 @Slf4j
 public class RefreshTokenService {
@@ -28,7 +30,11 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private JwtService jwtService;
-    private final String jwtCookieName = "SESSION_ID";
+    @Value("${application.security.jwt.refresh-token.cookie-name}")
+    private String jwtCookieName;
+
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private long refreshExpiration;
 
     public RefreshTokenEntity createRefreshToken(Integer id) {
 
@@ -38,7 +44,7 @@ public class RefreshTokenService {
                 .revoked(false)
                 .user(user)
                 .token(Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()))
-                .expiryDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 15))
+                .expiryDate(String.valueOf(Instant.now().plusMillis(refreshExpiration)))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
@@ -64,7 +70,7 @@ public class RefreshTokenService {
             log.error("Token is null");
             throw new TokenException(null, "Token is null");
         }
-        if (refreshTokenEntity.getExpiryDate().before(new Date())) {
+        if (refreshTokenEntity.getExpiryDate().compareTo(Instant.now().toString()) < 0) {
             refreshTokenRepository.delete(refreshTokenEntity);
             throw new TokenException(refreshTokenEntity.getToken(),
                     "Refresh Token was expired. Please make a new authentication request");

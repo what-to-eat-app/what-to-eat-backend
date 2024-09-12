@@ -11,3 +11,12 @@ spring:
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
 debug: true
+application:
+  security:
+    jwt:
+      secret-key: 90eccbcdd6722d51fc683385b5926bea7f77e477451925ee767caf77bcea2105
+      expiration: 900000 #  15 min in ms
+      cookie-name: jwt-cookie
+      refresh-token:
+        expiration: 1296000000 # 15 days in ms
+        cookie-name: refresh-jwt-cookie

@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service
+//@Service
 public class JwtService {
 
-    private static final String SECRET_KEY ="90eccbcdd6722d51fc683385b5926bea7f77e477451925ee767caf77bcea2105";
-    private final String jwtCookieName = "SESSION_ID";
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${application.security.jwt.cookie-name}")
+    private String jwtCookieName;
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -94,7 +98,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte [] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte [] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

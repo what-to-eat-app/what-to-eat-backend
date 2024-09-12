@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
@@ -59,12 +59,16 @@ public class AuthenticationService {
 
         UserEntity  user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+        var roles = user.getRole().getAuthorities().stream()
+                .map(SimpleGrantedAuthority::getAuthority)
+                .toList();
         var jwtToken = jwtService.generateToken(user);
 
         var refreshToken = refreshTokenService.createRefreshToken(user.getId());
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
+                .roles(roles)
                 .email(request.getEmail())
                 .id(user.getId())
                 .refreshToken(refreshToken.getToken())
