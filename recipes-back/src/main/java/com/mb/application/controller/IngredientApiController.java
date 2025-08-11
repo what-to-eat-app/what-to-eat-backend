@@ -1,62 +1,63 @@
 package com.mb.application.controller;
 
-import java.util.List;
-
+import com.mb.application.controller.request.AddIngredientRequest;
+import com.mb.application.controller.request.UpdateIngredientRequest;
+import com.mb.application.controller.response.IngredientResponse;
 import com.mb.application.exception.ResourceNotFoundException;
+import com.mb.application.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.mb.application.service.IngredientService;
-import com.mb.server.api.IngredientsApi;
-import com.mb.server.model.Ingredient;
+import java.util.List;
 
 @Controller
-@RequestMapping("${openapi.recipeManagement.base-path:/api/v1}")
-//@PreAuthorize("hasAnyRole('ADMIN','USER')")
-public class IngredientApiController implements IngredientsApi {
+@RequestMapping("/api/v1/ingredients")
+public class IngredientApiController {
 
     @Autowired
     IngredientService is;
 
-    //@PreAuthorize("hasAuthority('WRITE_PRIVILEGE') and hasRole('ADMIN')")
-    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
-        Ingredient created = is.createIngredient(ingredient);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    @GetMapping
+    public List<IngredientResponse> listIngredients(String fields, Integer offset, Integer limit, String name, Integer recipeId) {
+        return is.listIngredients(name);
+    }
+
+    @GetMapping("/{ingredient_id}")
+    public IngredientResponse retrieveIngredient(@PathVariable("ingredient_id") Long ingredientId) {
+        var ingredient = is.getIngredient(ingredientId);
+        if (ingredient == null) {
+            throw new ResourceNotFoundException(String.format("Recipe not found for recipe id: %d", ingredientId));
+        }
+        return ingredient;
 
     }
 
-    //@PreAuthorize("hasAuthority('DELETE_PRIVILEGE') and hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteIngredient(String id) {
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public IngredientResponse createIngredient(@RequestBody AddIngredientRequest ingredient) {
+        return is.createIngredient(ingredient);
+    }
+
+    @DeleteMapping("/{ingredient_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteIngredient(Long id) {
         is.deleteRecipe(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
-    //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<List<Ingredient>> listIngredients( String fields, Integer offset,  Integer limit,  String name, Integer recipeId) {
-        List<Ingredient> ingredients = is.listIngredients(name);
-        return new ResponseEntity<>(ingredients, HttpStatus.OK);
-    }
-
-    //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
-    public ResponseEntity<Ingredient> retrieveIngredient(@PathVariable("id") String id) {
-        Ingredient ingredient = is.getIngredient(id);
-        if (ingredient == null) {
-            throw new ResourceNotFoundException("Recipe not found for recipe id: " + id);
-        }
-        return new ResponseEntity<>(ingredient, HttpStatus.OK);
-
-    }
-
-    //@PreAuthorize("hasAuthority('UPDATE_PRIVILEGE') and hasRole('ADMIN')")
-    public ResponseEntity<Ingredient> updateIngredient(String id, @RequestBody Ingredient ingredient) {
-        int updatedId = is.updateIngredient(id, ingredient);
-        return retrieveIngredient(Integer.toString(updatedId));
+    @PutMapping("/{ingredient_id}")
+    public IngredientResponse updateIngredient(@PathVariable("ingredient_id") Long id, @RequestBody UpdateIngredientRequest ingredientToUpdate) {
+        return is.updateIngredient(id, ingredientToUpdate);
     }
 }

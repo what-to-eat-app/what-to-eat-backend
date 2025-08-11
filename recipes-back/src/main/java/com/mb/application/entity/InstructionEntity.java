@@ -1,3 +1,4 @@
+/*
 package com.mb.application.entity;
 
 import lombok.Data;
@@ -67,4 +68,4 @@ public class InstructionEntity {
     public void setPos(String position) {
         this.position = position;
     }
-}
+}*/

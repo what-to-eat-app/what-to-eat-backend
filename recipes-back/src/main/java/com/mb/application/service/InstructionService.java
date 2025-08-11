@@ -1,3 +1,4 @@
+/*
 package com.mb.application.service;
 
 import com.mb.application.entity.InstructionEntity;
@@ -76,3 +77,4 @@ public class InstructionService {
     }
 
 }
+*/

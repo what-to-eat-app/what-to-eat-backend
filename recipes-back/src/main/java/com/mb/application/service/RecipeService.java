@@ -1,40 +1,28 @@
+/*
 package com.mb.application.service;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mb.application.entity.IngredientEntity;
 import com.mb.application.entity.InstructionEntity;
 import com.mb.application.entity.RecipeEntity;
+import com.mb.application.repository.IngredientDao;
 import com.mb.application.repository.InstructionDao;
+import com.mb.application.repository.RecipeDao;
 import com.mb.application.util.Util;
-import com.mb.server.model.Instruction;
+import org.aspectj.apache.bcel.generic.Instruction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.mb.application.repository.IngredientDao;
-import com.mb.application.repository.RecipeDao;
-import com.mb.server.model.Ingredient;
-import com.mb.server.model.Recipe;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -92,7 +80,7 @@ public class RecipeService {
             recipeString = objectMapper.writeValueAsString(recipe);
             recipeEntity = objectMapper.readValue(recipeString, RecipeEntity.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(String.format("Error during conversion to String : {}",e));
+            throw new RuntimeException(String.format("Error during conversion to String : {}", e));
         }
 
         return recipeDao.save(recipeEntity).getId();
@@ -132,9 +120,9 @@ public class RecipeService {
     private Ingredient buildIngredientModel(IngredientEntity ingredientEntity) {
         Ingredient ingredient = new Ingredient();
 
-        ingredient.setId(ingredientEntity.getId());
-        ingredient.setName(ingredientEntity.getName()); 
-        ingredient.setSubtitle(ingredientEntity.getSubtitle());
+        //ingredient.setId(ingredientEntity.getId());
+        ingredient.setName(ingredientEntity.getName());
+        //ingredient.setSubtitle(ingredientEntity.getSubtitle());
         ingredient.setMeasure(ingredientEntity.getMeasure());
 
         return ingredient;
@@ -145,9 +133,10 @@ public class RecipeService {
 
         instruction.setId(instructionEntity.getId());
         instruction.setDescription(instructionEntity.getDescription());
-        instruction.setPosition(String.valueOf(Integer.parseInt(instructionEntity.getPos())+1));
+        instruction.setPosition(String.valueOf(Integer.parseInt(instructionEntity.getPos()) + 1));
 
         return instruction;
     }
 
 }
+*/

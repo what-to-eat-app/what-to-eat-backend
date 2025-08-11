@@ -19,23 +19,18 @@ import jakarta.persistence.Table;
 @Table(name = "ingredient")
 public class IngredientEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "name", nullable = false, length = 200)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "measure", length = 100)
+    @Column(name = "measure")
     private String measure;
 
-    @Column(name = "subtitle", length = 200)
-    private String subtitle;
+    @Column(name = "unit")
+    private String unit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipeid")
-    public RecipeEntity recipe;
-
-    @Column(name = "recipe_id", length = 200)
-    private String recipe_id;
+    @Column(name = "recipe_id")
+    private Long recipeId;
 }

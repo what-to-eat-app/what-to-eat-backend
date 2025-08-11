@@ -1,11 +1,13 @@
 package com.mb.application.service;
 
-import com.github.jknack.handlebars.internal.lang3.StringUtils;
+import com.mb.application.controller.request.AddIngredientRequest;
+import com.mb.application.controller.request.UpdateIngredientRequest;
+import com.mb.application.controller.response.IngredientResponse;
 import com.mb.application.entity.IngredientEntity;
+import com.mb.application.exception.ResourceNotFoundException;
 import com.mb.application.repository.IngredientDao;
-import com.mb.application.repository.RecipeDao;
 import com.mb.application.util.Util;
-import com.mb.server.model.Ingredient;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,86 +15,87 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class IngredientService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RecipeService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IngredientService.class);
 
-    @Autowired
-    IngredientDao ingredientDao;
+    private final IngredientDao ingredientDao;
 
-    @Autowired
-    RecipeDao recipeDao;
+    public List<IngredientResponse> listIngredients(String name) {
 
-    public List<Ingredient> listIngredients(String name) {
-
-        List<Ingredient> ingredients;
+        List<IngredientResponse> ingredients = new ArrayList<>();
         if (name != null) {
-            ingredients = new ArrayList<>(ingredientDao.findByNameIgnoreCase(name).stream()
-                    .map(this::buildIngredientModel).filter(Util.distinctByKey(Ingredient::getRecipeId)).toList());
+            ingredients = ingredientDao.findByNameIgnoreCase(name).stream()
+                    .map(this::buildIngredientModel)
+                    .filter(Util.distinctByKey(IngredientResponse::recipeId))
+                    .toList();
         } else {
             ingredients = new ArrayList<>(ingredientDao.findAll().stream()
-                    .map(this::buildIngredientModel).filter(Util.distinctByKey(Ingredient::getRecipeId)).toList());
+                    .map(this::buildIngredientModel)
+                    .filter(Util.distinctByKey(IngredientResponse::recipeId))
+                    .toList());
         }
 
-        ingredients
-                .removeAll(ingredients.stream().filter(e -> !StringUtils.isAlpha(e.getName())).toList());
-
-        ingredients.forEach(i -> {
-            i.setName(i.getName().substring(0, 1).toUpperCase() + i.getName().substring(1));
-
-        });
+//        ingredients
+//                .removeAll(ingredients.stream()
+//                        .filter(ingredient -> !StringUtils.isAlpha(ingredient.name()))
+//                        .toList());
+//
+//        ingredients.forEach(ingredient -> {
+//            ingredient.setName(ingredient.name().substring(0, 1).toUpperCase() + i.getName().substring(1));
+//
+//        });
 
         return ingredients;
     }
 
-    public Ingredient getIngredient(String id) {
-        Optional<IngredientEntity> ingredientEntity = ingredientDao.findById(Integer.valueOf(id));
-        return ingredientEntity.map(this::buildIngredientModel).orElse(null);
+    public IngredientResponse getIngredient(Long ingredientId) {
+        var ingredientEntity = ingredientDao.findById(ingredientId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ingredient #%d  not found", ingredientId)));
+        return buildIngredientModel(ingredientEntity);
     }
 
-    public Ingredient createIngredient(Ingredient ingredient) {
-        IngredientEntity ingredientEntity = new IngredientEntity();
-        ingredientEntity.setName(ingredient.getName());
-        ingredientEntity.setMeasure(ingredient.getMeasure());
-        ingredientEntity.setSubtitle(ingredient.getSubtitle());
+    public IngredientResponse createIngredient(AddIngredientRequest ingredient) {
+        var ingredientEntity = new IngredientEntity();
+        ingredientEntity.setName(ingredient.name());
+        ingredientEntity.setMeasure(ingredient.measure());
 
-        IngredientEntity created = ingredientDao.save(ingredientEntity);
-        return buildIngredientModel(created);
+        return buildIngredientModel(ingredientDao.save(ingredientEntity));
     }
 
-    public int updateIngredient(String id, Ingredient ingredient) {
-        IngredientEntity ingredientEntity = new IngredientEntity();
+    public IngredientResponse updateIngredient(Long id, UpdateIngredientRequest ingredient) {
+        var ingredientEntity = new IngredientEntity();
 
-        ingredientEntity.setId(Integer.valueOf(id));
-        ingredientEntity.setName(ingredient.getName());
-        ingredientEntity.setSubtitle(ingredient.getSubtitle());
-        ingredientEntity.setMeasure(ingredient.getMeasure());
+        ingredientEntity.setId(id);
+        ingredientEntity.setName(ingredient.name());
+        ingredientEntity.setMeasure(ingredient.measure());
+        ingredientEntity.setRecipeId(ingredient.recipeId());
 
-        return ingredientDao.save(ingredientEntity).getId();
+        return buildIngredientModel(ingredientDao.save(ingredientEntity));
 
     }
 
-    public void deleteRecipe(String id) {
-        Ingredient recipe = getIngredient(id);
-        if (recipe == null) {
-            return;
+    public void deleteRecipe(Long ingredientId) {
+        ingredientDao.findById(ingredientId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ingredient #%d  not found", ingredientId)));
+        ingredientDao.deleteById(ingredientId);
+    }
+
+    public IngredientResponse buildIngredientModel(IngredientEntity ingredientEntity) {
+        if (ingredientEntity == null) {
+            return null;
         }
-        ingredientDao.deleteById(Integer.valueOf(id));
+        return IngredientResponse.builder()
+                .id(ingredientEntity.getId())
+                .name(ingredientEntity.getName())
+                .measure(ingredientEntity.getMeasure())
+                .recipeId(ingredientEntity.getRecipeId())
+                .build();
+
     }
 
-    public Ingredient buildIngredientModel(IngredientEntity ingredientEntity) {
-        Ingredient ingredient = new Ingredient();
-
-        ingredient.setId(ingredientEntity.getId());
-        ingredient.setName(ingredientEntity.getName());
-        ingredient.setMeasure(ingredientEntity.getMeasure());
-        ingredient.setSubtitle(ingredientEntity.getSubtitle());
-        ingredient.setRecipeId(ingredientEntity.getRecipe().getId());
-
-        return ingredient;
-    }
 
 }

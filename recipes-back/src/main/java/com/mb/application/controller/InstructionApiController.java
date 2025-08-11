@@ -1,3 +1,4 @@
+/*
 package com.mb.application.controller;
 
 import com.mb.application.exception.ResourceNotFoundException;
@@ -7,15 +8,12 @@ import com.mb.server.model.Instruction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("${openapi.recipeManagement.base-path:/api/v1}")
@@ -41,7 +39,7 @@ public class InstructionApiController implements InstructionsApi {
 
     //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Instruction>> listInstructions(String fields, Integer offset, Integer limit, String name,
-            Integer recipeId) {
+                                                              Integer recipeId) {
         List<Instruction> instructions = is.listInstructions();
         return new ResponseEntity<List<Instruction>>(instructions, HttpStatus.OK);
     }
@@ -62,3 +60,4 @@ public class InstructionApiController implements InstructionsApi {
         return retrieveInstruction(Integer.toString(updatedId));
     }
 }
+*/
