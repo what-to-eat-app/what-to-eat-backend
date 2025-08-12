@@ -34,7 +34,7 @@ out/
 *.iml
 *.ipr
 *.iws
-.run/
+.run/*
 
 # Visual Studio Code
 .vscode/*
