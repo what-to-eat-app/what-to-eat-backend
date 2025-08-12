@@ -1,7 +1,7 @@
 LIQUIBASE_HOME := /opt/homebrew/opt/liquibase/libexec
 
 update:
-	$(LIQUIBASE_HOME)/liquibase  update
+	$(LIQUIBASE_HOME)/liquibase update
 
 rollback:
 	$(LIQUIBASE_HOME)/liquibase --url=$(DB_URL) \
