@@ -1,5 +1,6 @@
 package com.mb.application.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,23 +15,27 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Getter
-@Setter
 @Entity
-@Table(name = "ingredient")
+@Builder
+@Table(name = "ingredients")
 public class IngredientEntity {
     @Id
     @Column(name = "id")
     private Long id;
 
+    @Setter
     @Column(name = "name")
     private String name;
 
+    @Setter
     @Column(name = "measure")
     private String measure;
 
+    @Setter
     @Column(name = "unit")
     private String unit;
 
+    @Setter
     @Column(name = "recipe_id")
     private Long recipeId;
 }

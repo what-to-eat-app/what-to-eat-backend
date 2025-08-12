@@ -10,8 +10,8 @@ import com.mb.application.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +24,10 @@ public class IngredientService {
 
     private final IngredientDao ingredientDao;
 
+    @Transactional(readOnly = true)
     public List<IngredientResponse> listIngredients(String name) {
 
-        List<IngredientResponse> ingredients = new ArrayList<>();
+        List<IngredientResponse> ingredients;
         if (name != null) {
             ingredients = ingredientDao.findByNameIgnoreCase(name).stream()
                     .map(this::buildIngredientModel)
@@ -52,36 +53,46 @@ public class IngredientService {
         return ingredients;
     }
 
+    @Transactional(readOnly = true)
     public IngredientResponse getIngredient(Long ingredientId) {
-        var ingredientEntity = ingredientDao.findById(ingredientId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ingredient #%d  not found", ingredientId)));
+        var ingredientEntity = findIngredientById(ingredientId);
         return buildIngredientModel(ingredientEntity);
     }
 
-    public IngredientResponse createIngredient(AddIngredientRequest ingredient) {
-        var ingredientEntity = new IngredientEntity();
-        ingredientEntity.setName(ingredient.name());
-        ingredientEntity.setMeasure(ingredient.measure());
+    @Transactional
+    public IngredientResponse createIngredient(AddIngredientRequest createdIngredient) {
+        var ingredientEntity = IngredientEntity.builder()
+                .name(createdIngredient.name())
+                .measure(createdIngredient.measure())
+                .unit(createdIngredient.unit())
+                .recipeId(createdIngredient.recipeId())
+                .build();
 
         return buildIngredientModel(ingredientDao.save(ingredientEntity));
     }
 
-    public IngredientResponse updateIngredient(Long id, UpdateIngredientRequest ingredient) {
-        var ingredientEntity = new IngredientEntity();
+    @Transactional
+    public IngredientResponse updateIngredient(Long ingredientId, UpdateIngredientRequest updatedIngredient) {
+        var ingredientEntity = findIngredientById(ingredientId);
 
-        ingredientEntity.setId(id);
-        ingredientEntity.setName(ingredient.name());
-        ingredientEntity.setMeasure(ingredient.measure());
-        ingredientEntity.setRecipeId(ingredient.recipeId());
+        ingredientEntity.setName(updatedIngredient.name());
+        ingredientEntity.setMeasure(updatedIngredient.measure());
+        ingredientEntity.setUnit(updatedIngredient.unit());
+        ingredientEntity.setRecipeId(updatedIngredient.recipeId());
 
         return buildIngredientModel(ingredientDao.save(ingredientEntity));
 
     }
 
-    public void deleteRecipe(Long ingredientId) {
-        ingredientDao.findById(ingredientId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ingredient #%d  not found", ingredientId)));
+
+    public void deleteIngredient(Long ingredientId) {
+        findIngredientById(ingredientId);
         ingredientDao.deleteById(ingredientId);
+    }
+
+    private IngredientEntity findIngredientById(Long ingredientId) {
+        return ingredientDao.findById(ingredientId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Ingredient #%d  not found", ingredientId)));
     }
 
     public IngredientResponse buildIngredientModel(IngredientEntity ingredientEntity) {

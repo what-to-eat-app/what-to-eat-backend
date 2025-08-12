@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/ingredients")
 public class IngredientApiController {
 
@@ -34,11 +35,7 @@ public class IngredientApiController {
 
     @GetMapping("/{ingredient_id}")
     public IngredientResponse retrieveIngredient(@PathVariable("ingredient_id") Long ingredientId) {
-        var ingredient = is.getIngredient(ingredientId);
-        if (ingredient == null) {
-            throw new ResourceNotFoundException(String.format("Recipe not found for recipe id: %d", ingredientId));
-        }
-        return ingredient;
+        return is.getIngredient(ingredientId);
 
     }
 
@@ -50,10 +47,8 @@ public class IngredientApiController {
 
     @DeleteMapping("/{ingredient_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteIngredient(Long id) {
-        is.deleteRecipe(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+    public void deleteIngredient(@PathVariable("ingredient_id") Long id) {
+        is.deleteIngredient(id);
     }
 
     @PutMapping("/{ingredient_id}")
