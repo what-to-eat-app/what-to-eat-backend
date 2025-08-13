@@ -103,6 +103,7 @@ public class IngredientService {
                 .id(ingredientEntity.getId())
                 .name(ingredientEntity.getName())
                 .measure(ingredientEntity.getMeasure())
+                .unit(ingredientEntity.getUnit())
                 .recipeId(ingredientEntity.getRecipeId())
                 .build();
 
