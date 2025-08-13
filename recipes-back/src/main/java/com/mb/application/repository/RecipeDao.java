@@ -1,3 +1,4 @@
+/*
 package com.mb.application.repository;
 
 import com.mb.application.entity.RecipeEntity;
@@ -14,3 +15,4 @@ import java.util.List;
 public interface RecipeDao extends JpaRepository<RecipeEntity, Integer> {
 
 }
+*/

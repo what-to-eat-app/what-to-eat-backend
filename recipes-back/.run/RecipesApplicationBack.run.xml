@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RecipesApplicationBack" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.mb.application.RecipesBackApplication" />
+    <module name="recipes-back" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

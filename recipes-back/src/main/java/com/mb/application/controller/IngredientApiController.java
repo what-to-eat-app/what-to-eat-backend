@@ -1,55 +1,55 @@
 package com.mb.application.controller;
 
-import java.util.List;
-
-import com.mb.application.exception.ResourceNotFoundException;
+import com.mb.application.controller.request.AddIngredientRequest;
+import com.mb.application.controller.request.UpdateIngredientRequest;
+import com.mb.application.controller.response.IngredientResponse;
+import com.mb.application.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.mb.application.service.IngredientService;
-import com.mb.server.api.IngredientsApi;
-import com.mb.server.model.Ingredient;
+import java.util.List;
 
-@Controller
-@RequestMapping("${openapi.recipeManagement.base-path:/api/v1}")
-public class IngredientApiController implements IngredientsApi {
+@RestController
+@RequestMapping("/api/v1/ingredients")
+public class IngredientApiController {
 
     @Autowired
-    IngredientService is;
+    IngredientService ingredientService;
 
-    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
-        Ingredient created = is.createIngredient(ingredient);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
-
+    @GetMapping
+    public List<IngredientResponse> listIngredients(@Param("fields") String name) {
+        return ingredientService.listIngredients(name);
     }
 
-    public ResponseEntity<Void> deleteIngredient(String id) {
-        is.deleteRecipe(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+    @GetMapping("/{ingredient_id}")
+    public IngredientResponse retrieveIngredient(@PathVariable("ingredient_id") Long ingredientId) {
+        return ingredientService.getIngredient(ingredientId);
     }
 
-    public ResponseEntity<List<Ingredient>> listIngredients( String fields, Integer offset,  Integer limit,  String name, Integer recipeId) {
-        List<Ingredient> ingredients = is.listIngredients(name);
-        return new ResponseEntity<>(ingredients, HttpStatus.OK);
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public IngredientResponse createIngredient(@RequestBody AddIngredientRequest ingredient) {
+        return ingredientService.createIngredient(ingredient);
     }
 
-    public ResponseEntity<Ingredient> retrieveIngredient(@PathVariable("id") String id) {
-        Ingredient ingredient = is.getIngredient(id);
-        if (ingredient == null) {
-            throw new ResourceNotFoundException("Recipe not found for recipe id: " + id);
-        }
-        return new ResponseEntity<>(ingredient, HttpStatus.OK);
-
+    @DeleteMapping("/{ingredient_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteIngredient(@PathVariable("ingredient_id") Long id) {
+        ingredientService.deleteIngredient(id);
     }
 
-    public ResponseEntity<Ingredient> updateIngredient(String id, @RequestBody Ingredient ingredient) {
-        int updatedId = is.updateIngredient(id, ingredient);
-        return retrieveIngredient(Integer.toString(updatedId));
+    @PutMapping("/{ingredient_id}")
+    public IngredientResponse updateIngredient(@PathVariable("ingredient_id") Long id, @RequestBody UpdateIngredientRequest ingredientToUpdate) {
+        return ingredientService.updateIngredient(id, ingredientToUpdate);
     }
 }

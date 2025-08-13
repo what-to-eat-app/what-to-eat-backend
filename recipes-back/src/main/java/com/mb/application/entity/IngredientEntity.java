@@ -1,41 +1,46 @@
 package com.mb.application.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Getter
-@Setter
 @Entity
-@Table(name = "ingredient")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "ingredients")
 public class IngredientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "name", nullable = false, length = 200)
+    @Setter
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "measure", length = 100)
+    @Setter
+    @Column(name = "measure")
     private String measure;
 
-    @Column(name = "subtitle", length = 200)
-    private String subtitle;
+    @Setter
+    @Column(name = "unit")
+    private String unit;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recipeid")
-    public RecipeEntity recipe;
-
-    @Column(name = "recipe_id", length = 200)
-    private String recipe_id;
+    @Setter
+    @Column(name = "recipe_id")
+    private Long recipeId;
 }

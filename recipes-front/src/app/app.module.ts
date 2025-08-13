@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RecipesComponent } from './recipes/recipes.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { IngredientsComponent } from './ingredients/ingredients.component';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +22,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { ImageModule } from 'primeng/image';
 import { NgsContenteditableModule } from '@ng-stack/contenteditable';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { LoginComponent } from './login/login.component';
+import { AccessDeniedComponent } from './errors/access-denied/access-denied.component';
+import { HeaderComponent } from './header/header.component';
+import { HttpInterceptor } from './_helpers/http.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +35,11 @@ import { NgsContenteditableModule } from '@ng-stack/contenteditable';
     IngredientsComponent,
     RecipeDetailComponent,
     HomeComponent,
-    RelatedRecipesComponent
+    RelatedRecipesComponent,
+    PageNotFoundComponent,
+    LoginComponent,
+    AccessDeniedComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -51,9 +60,12 @@ import { NgsContenteditableModule } from '@ng-stack/contenteditable';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: RecipeDetailComponent,
+      useExisting: RecipeDetailComponent, 
       multi: true,
-    }
+    },
+    { provide: HTTP_INTERCEPTORS, 
+      useClass: HttpInterceptor, 
+      multi: true}
   ],
   bootstrap: [AppComponent]
 })

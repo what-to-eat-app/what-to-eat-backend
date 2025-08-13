@@ -1,3 +1,4 @@
+/*
 package com.mb.application.controller;
 
 import com.mb.application.exception.ResourceNotFoundException;
@@ -11,37 +12,39 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.List;
-import java.util.Optional;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2022-05-13T18:53:22.574116200+02:00[Europe/Prague]")
 @Controller
 @RequestMapping("${openapi.recipeManagement.base-path:/api/v1}")
+//@PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class InstructionApiController implements InstructionsApi {
 
     @Autowired
     InstructionService is;
 
+    //@PreAuthorize("hasAuthority('WRITE_PRIVILEGE') and hasRole('ADMIN')")
     public ResponseEntity<Instruction> createInstruction(@RequestBody Instruction instruction) {
         Instruction created = is.createInstruction(instruction);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
 
     }
 
+    //@PreAuthorize("hasAuthority('DELETE_PRIVILEGE') and hasRole('ADMIN')")
     public ResponseEntity<Void> deleteInstruction(String id) {
         is.deleteRecipe(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
+    //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
     public ResponseEntity<List<Instruction>> listInstructions(String fields, Integer offset, Integer limit, String name,
-            Integer recipeId) {
+                                                              Integer recipeId) {
         List<Instruction> instructions = is.listInstructions();
         return new ResponseEntity<List<Instruction>>(instructions, HttpStatus.OK);
     }
 
+    //@PreAuthorize("hasAuthority('READ_PRIVILEGE') and hasAnyRole('ADMIN','USER')")
     public ResponseEntity<Instruction> retrieveInstruction(@PathVariable("id") String id) {
         Instruction instruction = is.getInstruction(id);
         if (instruction == null) {
@@ -51,8 +54,10 @@ public class InstructionApiController implements InstructionsApi {
 
     }
 
+    //@PreAuthorize("hasAuthority('UPDATE_PRIVILEGE') and hasRole('ADMIN')")
     public ResponseEntity<Instruction> updateInstruction(String id, @RequestBody Instruction instruction) {
         int updatedId = is.updateInstruction(id, instruction);
         return retrieveInstruction(Integer.toString(updatedId));
     }
 }
+*/

@@ -1,8 +1,10 @@
+/*
 package com.mb.application.controller;
 
-import java.util.List;
-
 import com.mb.application.exception.ResourceNotFoundException;
+import com.mb.application.service.RecipeService;
+import com.mb.server.api.RecipesApi;
+import com.mb.server.model.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +12,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.mb.application.service.RecipeService;
-import com.mb.server.api.RecipesApi;
-import com.mb.server.model.Recipe;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("${openapi.recipeManagement.base-path:/api/v1}")
-public class RecipeApiController implements RecipesApi {
+public class RecipeApiController{
 
     @Autowired
     RecipeService rs;
@@ -51,8 +51,7 @@ public class RecipeApiController implements RecipesApi {
 
     public ResponseEntity<Recipe> updateRecipe(@PathVariable("id") String id, @RequestBody Recipe recipe) {
         int updatedId = rs.updateRecipe(id, recipe);
-        ResponseEntity<Recipe>  updatedRecipe = retrieveRecipe(Integer.toString(updatedId));
-        return updatedRecipe;
+        return retrieveRecipe(Integer.toString(updatedId));
     }
-
 }
+*/

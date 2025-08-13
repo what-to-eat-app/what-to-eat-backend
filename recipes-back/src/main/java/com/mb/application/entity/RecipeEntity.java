@@ -1,20 +1,21 @@
+/*
 package com.mb.application.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "recipe", schema = "main", catalog = "")
 public class RecipeEntity {
@@ -78,3 +79,4 @@ public class RecipeEntity {
         return result;
     }
 }
+*/
