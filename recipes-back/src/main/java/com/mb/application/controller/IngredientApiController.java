@@ -3,12 +3,9 @@ package com.mb.application.controller;
 import com.mb.application.controller.request.AddIngredientRequest;
 import com.mb.application.controller.request.UpdateIngredientRequest;
 import com.mb.application.controller.response.IngredientResponse;
-import com.mb.application.exception.ResourceNotFoundException;
 import com.mb.application.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,33 +23,33 @@ import java.util.List;
 public class IngredientApiController {
 
     @Autowired
-    IngredientService is;
+    IngredientService ingredientService;
 
     @GetMapping
     public List<IngredientResponse> listIngredients(String fields, Integer offset, Integer limit, String name, Integer recipeId) {
-        return is.listIngredients(name);
+        return ingredientService.listIngredients(name);
     }
 
     @GetMapping("/{ingredient_id}")
     public IngredientResponse retrieveIngredient(@PathVariable("ingredient_id") Long ingredientId) {
-        return is.getIngredient(ingredientId);
+        return ingredientService.getIngredient(ingredientId);
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public IngredientResponse createIngredient(@RequestBody AddIngredientRequest ingredient) {
-        return is.createIngredient(ingredient);
+        return ingredientService.createIngredient(ingredient);
     }
 
     @DeleteMapping("/{ingredient_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteIngredient(@PathVariable("ingredient_id") Long id) {
-        is.deleteIngredient(id);
+        ingredientService.deleteIngredient(id);
     }
 
     @PutMapping("/{ingredient_id}")
     public IngredientResponse updateIngredient(@PathVariable("ingredient_id") Long id, @RequestBody UpdateIngredientRequest ingredientToUpdate) {
-        return is.updateIngredient(id, ingredientToUpdate);
+        return ingredientService.updateIngredient(id, ingredientToUpdate);
     }
 }
