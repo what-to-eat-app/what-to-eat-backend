@@ -40,16 +40,6 @@ public class IngredientService {
                     .toList());
         }
 
-//        ingredients
-//                .removeAll(ingredients.stream()
-//                        .filter(ingredient -> !StringUtils.isAlpha(ingredient.name()))
-//                        .toList());
-//
-//        ingredients.forEach(ingredient -> {
-//            ingredient.setName(ingredient.name().substring(0, 1).toUpperCase() + i.getName().substring(1));
-//
-//        });
-
         return ingredients;
     }
 
