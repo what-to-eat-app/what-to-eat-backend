@@ -5,6 +5,7 @@ import com.mb.application.controller.request.UpdateIngredientRequest;
 import com.mb.application.controller.response.IngredientResponse;
 import com.mb.application.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,14 +27,13 @@ public class IngredientApiController {
     IngredientService ingredientService;
 
     @GetMapping
-    public List<IngredientResponse> listIngredients(String fields, Integer offset, Integer limit, String name, Integer recipeId) {
+    public List<IngredientResponse> listIngredients(@Param("fields") String name) {
         return ingredientService.listIngredients(name);
     }
 
     @GetMapping("/{ingredient_id}")
     public IngredientResponse retrieveIngredient(@PathVariable("ingredient_id") Long ingredientId) {
         return ingredientService.getIngredient(ingredientId);
-
     }
 
     @PostMapping
