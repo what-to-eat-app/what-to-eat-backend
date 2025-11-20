@@ -1,5 +1,29 @@
 databaseChangeLog:
   - changeSet:
+        id: create-images-table
+        author: Mehdi BENAZZOUZA
+        changes:
+          - createTable:
+              tableName: images
+              columns:
+                - column:
+                    name: id
+                    type: INT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: image_name
+                    type: VARCHAR(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: image
+                    type: MEDIUMBLOB
+                    constraints:
+                      nullable: false
+  - changeSet:
       id: create-recipes-table
       author: Mehdi BENAZZOUZA
       changes:
@@ -9,6 +33,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: INT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -19,16 +44,27 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: url
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
               - column:
                   name: category
                   type: VARCHAR(100)
               - column:
                   name: description
                   type: TEXT
+              - column:
+                  name: image_id
+                  type: INT
+        - addForeignKeyConstraint:
+            baseColumnNames: image_id
+            baseTableName: recipes
+            constraintName: fk_recipe_image
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: images
+
   - changeSet:
       id: create-ingredients-table
-      author: Mehdi BENAZOUZA
+      author: Mehdi BENAZZOUZA
       changes:
         - createTable:
             tableName: ingredients
@@ -36,6 +72,7 @@ databaseChangeLog:
               - column:
                   name: id
                   type: INT
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -59,3 +96,47 @@ databaseChangeLog:
                   type: INT
                   constraints:
                     nullable: true
+        - addForeignKeyConstraint:
+            baseColumnNames: recipe_id
+            baseTableName: ingredients
+            constraintName: fk_ingredient_recipe
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: recipes
+
+  - changeSet:
+      id: create-instructions-table
+      author: Mehdi BENAZZOUZA
+      changes:
+        - createTable:
+            tableName: instructions
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recipe_id
+                  type: INT
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseColumnNames: recipe_id
+            baseTableName: instructions
+            constraintName: fk_instruction_recipe
+            onDelete: CASCADE
+            referencedColumnNames: id
+            referencedTableName: recipes
