@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "what_to_eat",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

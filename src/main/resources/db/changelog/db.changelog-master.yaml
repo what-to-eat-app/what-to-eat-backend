@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/01-data-init.yaml
+  - include:
+      file: db/changelog/changes/02-add-auto-increment-to-recipe-and-ingredient-id.yaml
+  - include:
+      file: db/changelog/changes/03-create-link-table-recipe-ingredient.yaml

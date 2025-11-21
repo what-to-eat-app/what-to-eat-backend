@@ -1,0 +1,22 @@
+meta {
+  name: Update Recipe
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8080/api/v1/recipes/6
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "ingredientIds": [] 
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

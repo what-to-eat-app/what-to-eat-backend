@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-recipes-table
+      author: Mehdi BENAZZOUZA
+      changes:
+        - createTable:
+            tableName: recipes
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: VARCHAR(50)
+              - column:
+                  name: category
+                  type: VARCHAR(100)
+              - column:
+                  name: description
+                  type: TEXT
+  - changeSet:
+      id: create-ingredients-table
+      author: Mehdi BENAZOUZA
+      changes:
+        - createTable:
+            tableName: ingredients
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: measure
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: unit
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true

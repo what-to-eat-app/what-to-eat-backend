@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_recipe_ingredient_link_table
+      author: Mehdi BENAZZOUZA
+      changes:
+        - createTable:
+            tableName: recipe_ingredient
+            columns:
+              - column:
+                  name: recipe_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ingredient_id
+                  type: INT
+        - addForeignKeyConstraint:
+            baseColumnNames: recipe_id
+            baseTableName: recipe_ingredient
+            constraintName: fk_recipe__recipe_ingredient
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: recipes
+        - addForeignKeyConstraint:
+            baseColumnNames: ingredient_id
+            baseTableName: recipe_ingredient
+            constraintName: fk_ingredients__recipe_ingredient
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: ingredients
